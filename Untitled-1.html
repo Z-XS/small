@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <form name="cal">
+      <table>
+        <tr>
+          <input type="Text" value=0 name="typein">
+        <tr>
+          <td><input type="Button" value="1" onclick="add('1')"></td>
+          <td><input type="Button" value="2" onclick="add('2')"></td>
+          <td><input type="Button" value="3" onclick="add('3')"></td>
+          <td><input type="Button" value="ce" onclick="typein.value='0'"></td>
+        </tr>
+          <td><input type="Button" value="4" onclick="add('4')"></td>
+          <td><input type="Button" value="5" onclick="add('5')"></td>
+          <td><input type="Button" value="6" onclick="add('6')"></td>
+          <td><input type="Button" value='+' onclick="add('+')"></td>
+        <tr>
+          <td><input type="Button" value="7" onclick="add('7')"></td>
+          <td><input type="Button" value="8" onclick="add('8')"></td>
+          <td><input type="Button" value="9" onclick="add('9')"></td>
+          <td><input type="Button" value="=" onclick="calc()"></td>
+        </tr>
+        <tr>
+          <td><input type="Button" value='-' onclick="add('-')"></td>
+          <td><input type="Button" value='*' onclick="add('*')"></td>
+          <td><input type="Button" value='/' onclick="add('/')"></td>
+          <td><input type="Button" value='^' onclick="add('^')"></td>
+        </tr>
+        <tr>
+          <td><input type="Button" value="sin" onclick="add('sin')"></td>
+          <td><input type="Button" value="cos" onclick="add('cos')"></td>
+          <td><input type="Button" value="tan" onclick="add('tan')"></td>
+          <td><input type="Button" value="ln" onclick="add('ln')"></td>
+        </tr>
+        <tr>
+          <td><input type="Button" value='(' onclick="add('(')"></td>
+          <td><input type="Button" value="pi" onclick="add('pi')"></td>
+          <td><input type="Button" value='e' onclick="add('e')"></td>
+          <td><input type="Button" value=')' onclick="add(')')"></td>
+        </tr>
+      <table>
+    </form>
+    <script type="text/javascript">
+      const level = new Array();
+      level['+'] = 1;
+      level['-'] = 1;
+      level['*'] = 2;
+      level['/'] = 2;
+      level['^'] = 3;
+      level['s'] = 4;
+      level['c'] = 4;
+      level['t'] = 4;
+      level['('] = 0;
+      level['l'] = 4;
+      console.log(level)
+      console.log([{'a':1},{'b':1},{'c':1},{'d':1},{'e':1}])
+      const opt = new Array();
+      opt['+'] = 2;
+      opt['-'] = 2;
+      opt['*'] = 2;
+      opt['/'] = 2;
+      opt['^'] = 2;
+      opt['s'] = 1;
+      opt['c'] = 1;
+      opt['t'] = 1;
+      opt['('] = 0;
+      opt['l'] = 1;
+     
+      var stack1 = new Array();
+      var stack2 = new Array();
+      var top1 = 0;
+      var top2 = 0;
+     
+      function add(a)
+      {
+        if (cal.typein.value=="0")
+          cal.typein.value=a;
+        else
+          cal.typein.value += a;
+      }
+      function isdigit(a)
+      {
+        if (a<='9' && a>='0')
+          return true;
+        else
+          return false;
+      }
+      function work(a,b,c)
+      {
+        if (c == '+')
+          return a+b;
+        if (c == '-')
+          return a-b;
+        if (c == '*')
+          return a*b;
+        if (c == '/')
+          return a/b;
+        if (c == '^')
+          return Math.pow(a,b);
+        if (c == 's')
+          return Math.sin(a);
+        if (c == 'c')
+          return Math.cos(a);
+        if (c == 't')
+          return Math.tan(a);
+        if (c == 'l')
+          return Math.log(a);
+        if (c == 'n')
+          return Math.ln(a);
+      }
+      function calc()
+      {
+        var str = cal.typein.value;
+        str = str.replace(/sin/g,"s");
+        str = str.replace(/cos/g,"c");
+        str = str.replace(/tan/g,"t");
+        str = str.replace(/ln/g,"l");
+        str = str.replace(/pi/g,"3.141592653");
+        str = str.replace(/e/g,"2.71828183");
+        if (str[0] == '-')
+          str = '0'+str;
+        for (var i=0;i<str.length;i++)
+        {
+          if (isdigit(str[i]))
+          {
+            var j = i;
+            var result=0;
+            var result2=0;
+            while (j<str.length+1&&isdigit(str[j]))
+            {
+              result = result*10+Number(str[j]);
+              j ++;
+            }
+            if (str[j] == '.')
+            {
+              var bit = 0.1;
+              j ++;
+              while (j<str.length+1&&isdigit(str[j]))
+              {
+                result2 += str[j]*bit;
+                bit /= 10.0;
+                j ++;
+              }
+            }
+            stack2[++top2] = result+result2;
+            i = j - 1;
+          }
+          else if (str[i]=='(')
+          {
+            stack1[++top1] = '(';
+          }
+          else if (str[i]==')')
+          {
+            while (stack1[top1] != '(')
+            {
+              var oper = stack1[top1--];
+              if (opt[oper] == 2)
+              {
+                var num1 = stack2[top2--];
+                var num2 = stack2[top2--];
+                var num = work(num2,num1,oper);
+              }
+              else
+              {
+                var num1 = stack2[top2--];
+                var num = work(num1,0,oper);
+              }
+              stack2[++top2] = num;
+            }
+            top1--;
+          }
+          else if (top1==0 || level[str[i]] > level[stack1[top1]])
+          {
+            stack1[++top1] = str[i];
+          }
+          else
+          {
+            while (top1>0 && level[str[i]] <= level[stack1[top1]])
+            {
+              var oper = stack1[top1--];
+              if (opt[oper] == 2)
+              {
+                var num1 = stack2[top2--];
+                var num2 = stack2[top2--];
+                var num = work(num2,num1,oper);
+              }
+              else
+              {
+                var num1 = stack2[top2--];
+                var num = work(num1,0,oper);
+              }
+              stack2[++top2] = num;
+            }
+            stack1[++top1] = str[i];
+          }
+        }
+        while (top1 > 0)
+        {
+          var oper = stack1[top1--];
+          if (opt[oper] == 2)
+          {
+            var num1 = stack2[top2--];
+            var num2 = stack2[top2--];
+            var num = work(num2,num1,oper);
+          }
+          else
+          {
+            var num1 = stack2[top2--];
+            var num = work(num1,0,oper);
+          }
+          stack2[++top2] = num;
+        }
+        cal.typein.value = stack2[top2];
+      }
+    </script>
+</body>
+</html>
