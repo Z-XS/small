@@ -1,19 +1,20 @@
 var express=require('express');
 var app =express();
-var mysql = require('mysql')
+// var mysql = require('mysql')
 var bodyParser = require('body-parser'); 
+var sqlConnect = require('./sqlConnect')
 //引用bodyParser 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 //连接数据库
-var connection = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : '123456',
-    database : 'text'
-})
-connection.connect()
-var addSql = 'INSERT INTO supform(qd,name,offer) VALUES ?'
+// var connection = mysql.createConnection({
+//     host : 'localhost',
+//     user : 'root',
+//     password : '123456',
+//     database : 'text'
+// })
+// connection.connect()
+var connection = sqlConnect.connection
 //设置跨域访问
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -22,23 +23,25 @@ app.all('*', function(req, res, next) {
     res.header("X-Powered-By",' 3.2.1');
     res.header("Content-Type", "application/json;charset=utf-8");
     next();
- });
- var questions=[
+});
+var questions=[
     {
-    data:213,
-    num:444,
-    age:12
+        data:213,
+        num:444,
+        age:12
     },
     {
-    data:456,
-    num:678,
-    age:13
+        data:456,
+        num:678,
+        age:13
     }];
-//写个接口123
-app.get('/123',function(req,res){
-    res.status(200),
-    res.json(questions)
+    //写个接口
+    app.get('/123',function(req,res){
+        res.status(200),
+        res.json(questions)
     });
+    var addSql = 'INSERT INTO supform(qd,name,offer) VALUES ?'
+    var addSql2 = 'INSERT INTO pubform(qd,name,offer) VALUES ?'
 app.post('/w',function(req,res){
     console.log(req.body);
     var SqlParams = req.body
@@ -50,6 +53,18 @@ app.post('/w',function(req,res){
         console.log('加入',result)
     })
     // connection.end()
+    res.json(req.body)
+})
+app.post('/hk',function(req,res){
+    //console.log(req.body);
+    var SqlParams = req.body
+    connection.query(addSql2,[SqlParams],function(err,result){
+        if(err){
+            console.log(err.message + '失败')
+            return
+        }
+        console.log('加入',result)
+    })
     res.json(req.body)
 })
 //配置服务端口

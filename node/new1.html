@@ -23,7 +23,7 @@
     data: { 
         sites : [
     {qd:1,name:12,offer:false},
-    {qd:2,name:13,offer:true},
+    {qd:2,name:13,offer:false},
     {qd:3,name:14,offer:false},
     {qd:4,name:15,offer:false},
     {qd:5,name:16,offer:false},
@@ -32,23 +32,25 @@
     Arr: []
     },
     methods: {
-    check: function(item) {
-    return item.offer == true
-    },
     doSome: function() {
-        // console.log(this.sites.filter(this.check))
-        this.Arr = this.sites.filter(this.check)
-        console.log(this.Arr)
+        const pArr = this.sites.filter(site => site.offer == true)
+        console.log(pArr.__proto__ === this.sites.__proto__)
         const arr = []
-        const obj = this.Arr
+        const obj = pArr
         for(let i in obj){
             arr.push([obj[i].qd,obj[i].name,obj[i].offer])
         }
-        console.log(arr)
+        const arr1 = this.sites 
+       // var that = this
+        console.log(this.sites.__proto__ === arr1.__proto__)
         axios.post('http://localhost:3001/w',arr).then(function (response){
             console.log(response)
+            //console.log(that.sites)
+            for(let j in arr1){
+                arr1[j].offer = false
+            }
         })
-        .catch(function (error){
+        .catch(error => {
             console.log(error)
         })
 
