@@ -1,0 +1,11 @@
+<view class='container'>
+  <view class='dayHoliday'>
+  </view>
+  <view class='content'>
+  <view class='holiday' wx:for="{{ArrHoliday}}" wx:key="{{index}}" style='background-color:{{item.bgCol}}'>
+    <navigator url='/pages/detail/detail?holiday={{item.Dayname}}'>
+    <text>{{item.Dayname}}</text>
+    </navigator>
+  </view>
+  </view>
+</view>
