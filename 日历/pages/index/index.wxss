@@ -1,0 +1,24 @@
+.i-head {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 36rpx;
+}
+.week {
+  display: flex;
+  height: 60rpx;
+}
+.week view {
+  flex: 1;
+  text-align: center;
+  line-height: 60rpx;
+}
+.v1 {
+  display: flex;
+  flex-wrap: wrap;
+}
+.v1 view {
+  height: 100rpx;
+  line-height: 100rpx;
+  background-color: khaki;
+  text-align: center;
+}

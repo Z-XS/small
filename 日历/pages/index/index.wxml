@@ -1,0 +1,18 @@
+<view class='i-head'>
+  <view class='goleft' bindtap='prevMon'>上一月</view>
+  <view>{{year}}年{{month+1}}月</view>
+  <view class='goright' bindtap='nextMon'>下一月</view>
+</view>
+<view class='week'>
+  <view wx:for='{{weekArr}}' wx:key='{{index}}'>
+<navigator open-type='navigate' url='../logs/logs?index={{index}}'>
+  {{item}}
+  </navigator>
+  </view>
+</view>
+<view class='v1' style='width:{{pwidth*7}}px'>
+  <view wx:for='{{dateArr}}' wx:key='index' 
+  style="{{index==0?'margin-left:'+ pwidth*firstDay + 'px;':''}}width:{{pwidth}}px">
+    {{item}}
+  </view>
+</view>
