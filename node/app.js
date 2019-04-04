@@ -41,7 +41,17 @@ var questions=[
         res.json(questions)
     });
     var addSql = 'INSERT INTO supform(qd,name,offer) VALUES ?'
-    var addSql2 = 'INSERT INTO pubform(qd,name,offer) VALUES ?'
+    var addSql1 = 'INSERT INTO pubform1(qd,name,offer) VALUES ?'
+    var addSql2 = 'INSERT INTO pubform(src,name,offer) VALUES ?'
+    var readSql = 'SELECT * FROM pubform'
+    app.get('/read',function(req,res){
+        connection.query(readSql,function(err,result){
+            if(err){
+                console.log(err.message)
+            }
+            res.json(result)
+        })
+    })
 app.post('/w',function(req,res){
     console.log(req.body);
     var SqlParams = req.body
@@ -56,8 +66,20 @@ app.post('/w',function(req,res){
     res.json(req.body)
 })
 app.post('/hk',function(req,res){
-    //console.log(req.body);
     var SqlParams = req.body
+    console.log(SqlParams)
+    connection.query(addSql1,[SqlParams],function(err,result){
+        if(err){
+            console.log(err.message + '失败')
+            return
+        }
+        console.log('加入',result)
+    })
+    res.json(req.body)
+})
+app.post('/npc',function(req,res){
+    var SqlParams = req.body
+    console.log(SqlParams)
     connection.query(addSql2,[SqlParams],function(err,result){
         if(err){
             console.log(err.message + '失败')
@@ -71,7 +93,7 @@ app.post('/hk',function(req,res){
 var server = app.listen(3001,'localhost',function () {
 
     var host = server.address().address;
-     var port = server.address().port;
+    var port = server.address().port;
 
-        console.log("Example app listening at http://%s:%s", host, port);
+    console.log("Example app listening at http://%s:%s", host, port);
     })
